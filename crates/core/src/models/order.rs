@@ -1,5 +1,5 @@
+use bigdecimal::BigDecimal;
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use sqlx::FromRow;
@@ -78,10 +78,10 @@ pub struct Order {
     pub email: Option<String>,
     pub phone: Option<String>,
     pub locale: String,
-    pub total: Decimal,
+    pub total: BigDecimal,
     pub datetime: DateTime<Utc>,
     pub expires: Option<DateTime<Utc>>,
-    pub payment_provider: String,
+    pub payment_provider: Option<String>,
     pub payment_state: String,
     pub customer_id: Option<Uuid>,
     pub testmode: bool,
@@ -107,9 +107,9 @@ pub struct OrderPosition {
     pub positionid: i32,
     pub item_id: Uuid,
     pub variation_id: Option<Uuid>,
-    pub price: Decimal,
-    pub tax_rate: Decimal,
-    pub tax_value: Decimal,
+    pub price: BigDecimal,
+    pub tax_rate: BigDecimal,
+    pub tax_value: BigDecimal,
     pub secret: String,
     pub attendee_name: Option<String>,
     pub attendee_email: Option<String>,
@@ -120,5 +120,5 @@ pub struct OrderPosition {
     pub blocked: Option<JsonValue>,
     pub valid_from: Option<DateTime<Utc>>,
     pub valid_until: Option<DateTime<Utc>>,
-    pub voucher_budget_use: Option<Decimal>,
+    pub voucher_budget_use: Option<BigDecimal>,
 }

@@ -1,5 +1,5 @@
+use bigdecimal::BigDecimal;
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
@@ -26,8 +26,8 @@ pub struct Item {
     pub category_id: Option<Uuid>,
     pub name: String,
     pub description: Option<String>,
-    pub default_price: Decimal,
-    pub tax_rate: Decimal,
+    pub default_price: BigDecimal,
+    pub tax_rate: BigDecimal,
     pub active: bool,
     pub admission: bool,
     pub personalized: bool,
@@ -54,7 +54,7 @@ pub struct ItemVariation {
     pub id: Uuid,
     pub item_id: Uuid,
     pub value: String,
-    pub default_price: Option<Decimal>,
+    pub default_price: Option<BigDecimal>,
     pub active: bool,
     pub position: i32,
     pub require_approval: bool,

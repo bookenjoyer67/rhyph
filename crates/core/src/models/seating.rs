@@ -1,4 +1,4 @@
-use rust_decimal::Decimal;
+use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use sqlx::FromRow;
@@ -34,5 +34,5 @@ pub struct SeatCategoryMapping {
     pub event_id: Uuid,
     pub category_name: String,
     pub item_id: Uuid,
-    pub price: Decimal,
+    pub price: BigDecimal,
 }
