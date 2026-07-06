@@ -2195,6 +2195,7 @@ dependencies = [
  "rhyph-core",
  "serde",
  "serde_json",
+ "sqlx",
  "thiserror 2.0.18",
  "tower 0.5.3",
  "tower-http",

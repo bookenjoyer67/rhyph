@@ -1,7 +1,7 @@
 [package]
 name = "rhyph-api"
 version.workspace = true
-edition.workspace = true
+edition = "2021"
 license.workspace = true
 
 [dependencies]
@@ -9,11 +9,11 @@ rhyph-core = { path = "../core" }
 axum.workspace = true
 tower.workspace = true
 tower-http.workspace = true
-sqlx.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 uuid.workspace = true
 chrono.workspace = true
 jsonwebtoken.workspace = true
+sqlx.workspace = true
 tracing.workspace = true
 thiserror.workspace = true
