@@ -23,7 +23,8 @@ async fn main() -> anyhow::Result<()> {
         let password = args.get(2).expect("usage: rhyph-server hashpw <password>");
         let salt = SaltString::generate(&mut OsRng);
         let hash = Argon2::default()
-            .hash_password(password.as_bytes(), &salt)?
+            .hash_password(password.as_bytes(), &salt)
+            .map_err(|e| anyhow::anyhow!("hash failed: {e}"))?
             .to_string();
         println!("{hash}");
         return Ok(());
