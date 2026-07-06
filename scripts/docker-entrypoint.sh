@@ -1,35 +1,33 @@
 #!/bin/sh
-# Docker entrypoint — seed default admin + organizer on first start
+# Docker entrypoint — run migrations, seed admin, start server
 
-SEED_MARKER="/data/.seeded"
+echo "Running migrations..."
+# Run server briefly to apply migrations, then kill it
+timeout 10 rhyph-server 2>/dev/null || true
+sleep 1
 
-if [ ! -f "$SEED_MARKER" ]; then
-    echo "First start — seeding default admin user and organizer..."
+# Replace placeholder password with real hash
+echo "Seeding admin user..."
+ADMIN_HASH=$(rhyph-server hashpw "admin123" 2>/dev/null || echo "")
 
-    # Generate admin password hash
-    ADMIN_HASH=$(rhyph-server hashpw "admin123" 2>/dev/null || echo "")
+if [ -n "$ADMIN_HASH" ]; then
+    PGPASSWORD="${DB_PASSWORD:-rhyph}" psql \
+        -h "${DB_HOST:-db}" \
+        -U "${DB_USER:-rhyph}" \
+        -d "${DB_NAME:-rhyph}" \
+        -c "UPDATE users SET password_hash = '$ADMIN_HASH'
+            WHERE email = 'admin@rhyph.local';" 2>/dev/null || true
 
-    if [ -n "$ADMIN_HASH" ]; then
-        PGPASSWORD="${DB_PASSWORD:-rhyph}" psql \
-            -h "${DB_HOST:-db}" \
-            -U "${DB_USER:-rhyph}" \
-            -d "${DB_NAME:-rhyph}" \
-            -c "INSERT INTO users (email, password_hash, is_admin)
-                VALUES ('admin@rhyph.local', '$ADMIN_HASH', true)
-                ON CONFLICT (email) DO NOTHING;" 2>/dev/null
-
-        PGPASSWORD="${DB_PASSWORD:-rhyph}" psql \
-            -h "${DB_HOST:-db}" \
-            -U "${DB_USER:-rhyph}" \
-            -d "${DB_NAME:-rhyph}" \
-            -c "INSERT INTO organizers (slug, name)
-                VALUES ('default', 'My Venue')
-                ON CONFLICT (slug) DO NOTHING;" 2>/dev/null
-    fi
-
-    mkdir -p /data
-    touch "$SEED_MARKER"
-    echo "Seed complete."
+    PGPASSWORD="${DB_PASSWORD:-rhyph}" psql \
+        -h "${DB_HOST:-db}" \
+        -U "${DB_USER:-rhyph}" \
+        -d "${DB_NAME:-rhyph}" \
+        -c "INSERT INTO organizers (slug, name)
+            VALUES ('default', 'My Venue')
+            ON CONFLICT (slug) DO NOTHING;" 2>/dev/null || true
 fi
+
+echo "Seed complete. Login: admin@rhyph.local / admin123"
+echo "Starting Rhyph..."
 
 exec rhyph-server
