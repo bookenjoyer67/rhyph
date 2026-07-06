@@ -64,8 +64,8 @@ declare module '$env/static/private' {
 	export const EDITOR: string;
 	export const XDG_SEAT: string;
 	export const PWD: string;
-	export const XDG_SESSION_DESKTOP: string;
 	export const LOGNAME: string;
+	export const XDG_SESSION_DESKTOP: string;
 	export const XDG_SESSION_TYPE: string;
 	export const npm_config_init_module: string;
 	export const KITTY_PUBLIC_KEY: string;
@@ -73,8 +73,8 @@ declare module '$env/static/private' {
 	export const GDM_LANG: string;
 	export const HOME: string;
 	export const USERNAME: string;
-	export const LANG: string;
 	export const LC_PAPER: string;
+	export const LANG: string;
 	export const _JAVA_AWT_WM_NONREPARENTING: string;
 	export const XDG_CURRENT_DESKTOP: string;
 	export const npm_package_version: string;
@@ -90,9 +90,9 @@ declare module '$env/static/private' {
 	export const npm_lifecycle_script: string;
 	export const npm_config_npm_version: string;
 	export const XDG_SESSION_CLASS: string;
-	export const TERMINFO: string;
 	export const TERM: string;
 	export const LC_IDENTIFICATION: string;
+	export const TERMINFO: string;
 	export const npm_package_name: string;
 	export const npm_config_prefix: string;
 	export const USER: string;
@@ -243,8 +243,8 @@ declare module '$env/dynamic/private' {
 		EDITOR: string;
 		XDG_SEAT: string;
 		PWD: string;
-		XDG_SESSION_DESKTOP: string;
 		LOGNAME: string;
+		XDG_SESSION_DESKTOP: string;
 		XDG_SESSION_TYPE: string;
 		npm_config_init_module: string;
 		KITTY_PUBLIC_KEY: string;
@@ -252,8 +252,8 @@ declare module '$env/dynamic/private' {
 		GDM_LANG: string;
 		HOME: string;
 		USERNAME: string;
-		LANG: string;
 		LC_PAPER: string;
+		LANG: string;
 		_JAVA_AWT_WM_NONREPARENTING: string;
 		XDG_CURRENT_DESKTOP: string;
 		npm_package_version: string;
@@ -269,9 +269,9 @@ declare module '$env/dynamic/private' {
 		npm_lifecycle_script: string;
 		npm_config_npm_version: string;
 		XDG_SESSION_CLASS: string;
-		TERMINFO: string;
 		TERM: string;
 		LC_IDENTIFICATION: string;
+		TERMINFO: string;
 		npm_package_name: string;
 		npm_config_prefix: string;
 		USER: string;

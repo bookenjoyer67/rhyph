@@ -2,6 +2,11 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
+use argon2::{
+    password_hash::{PasswordHasher, SaltString},
+    Argon2,
+};
+use rand::rngs::OsRng;
 use rhyph_core::services::{cart, orders};
 use sqlx::postgres::PgPoolOptions;
 use tower_http::cors::CorsLayer;
@@ -12,14 +17,26 @@ mod app;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // Handle subcommands
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() > 1 && args[1] == "hashpw" {
+        let password = args.get(2).expect("usage: rhyph-server hashpw <password>");
+        let salt = SaltString::generate(&mut OsRng);
+        let hash = Argon2::default()
+            .hash_password(password.as_bytes(), &salt)?
+            .to_string();
+        println!("{hash}");
+        return Ok(());
+    }
+
     tracing_subscriber::fmt()
         .with_env_filter(EnvFilter::from_default_env())
         .init();
 
     dotenvy::dotenv().ok();
 
-    let database_url = std::env::var("DATABASE_URL")
-        .expect("DATABASE_URL must be set");
+    let database_url =
+        std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
     let pool = PgPoolOptions::new()
         .max_connections(10)

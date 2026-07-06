@@ -17,8 +17,6 @@ CREATE TABLE devices (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Seed a default admin user (password: admin, change immediately)
--- Password hash is argon2id of "admin"
-INSERT INTO users (email, password_hash, is_admin)
-VALUES ('admin@rhyph.local', '$argon2id$v=19$m=19456,t=2,p=1$placeholder$placeholder', TRUE)
-ON CONFLICT (email) DO NOTHING;
+-- Default admin user is created by scripts/setup.sh or docker entrypoint.
+-- Password: admin123 (change immediately after first login).
+
