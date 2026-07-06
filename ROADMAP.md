@@ -31,9 +31,9 @@ Payments are functional but need hardening.
 
 ## Phase 3: Payments (in progress)
 
-- [x] Stripe checkout session creation
-- [x] Stripe webhook verification (HMAC-SHA256)
-- [x] Payment status → order status (paid → confirmed)
+- [ ] Stripe checkout session creation (code written, untested)
+- [ ] Stripe webhook verification (code written, untested)
+- [ ] Payment status → order status (code written, untested)
 - [ ] Refund handling
 - [ ] Payment failure recovery UX
 - [ ] Success/cancel URL flow end-to-end
@@ -85,11 +85,11 @@ Payments are functional but need hardening.
 
 ## Known Gaps
 
-**Payments.** The Stripe provider creates checkout sessions and verifies
-webhooks. What's missing: the frontend checkout flow end-to-end (cart →
-Stripe redirect → success page → order confirmation), refund handling,
-and production hardening. This works in isolation but hasn't been
-battle-tested.
+**Payments.** The Stripe provider crate has checkout session creation and
+webhook verification code, but none of it has been tested — no Stripe account
+was connected, no webhook was received, no payment was processed. The code
+compiles. That's it. The frontend checkout flow (cart → Stripe redirect →
+success page → order confirmation) doesn't exist yet.
 
 **Federation.** The `crates/federation/` crate has real types (actors,
 activities, converter, publisher) but the `routes/federation.rs` file is
