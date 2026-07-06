@@ -1,8 +1,14 @@
+pub mod stripe;
+
+use async_trait::async_trait;
+use bigdecimal::BigDecimal;
+
+#[async_trait]
 pub trait PaymentProvider: Send + Sync {
     async fn create_checkout_session(
         &self,
         order_id: uuid::Uuid,
-        amount: rust_decimal::Decimal,
+        amount: BigDecimal,
         currency: &str,
     ) -> Result<String, PaymentError>;
 
