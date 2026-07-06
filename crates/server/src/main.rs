@@ -14,6 +14,7 @@ use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
 
 mod app;
+mod spa_config;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

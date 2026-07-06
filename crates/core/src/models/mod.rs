@@ -1,5 +1,6 @@
 pub mod organizer;
 pub mod event;
+pub mod image;
 pub mod item;
 pub mod quota;
 pub mod order;
@@ -28,3 +29,4 @@ pub use seating::{SeatingPlan, Seat, SeatCategoryMapping};
 pub use user::{User, UserInfo};
 
 pub use device::Device;
+pub use image::{OrganizerImage, OrganizerImageResponse};

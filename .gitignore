@@ -3,3 +3,20 @@
 *.swp
 *.swo
 .DS_Store
+
+# SvelteKit generated
+.svelte-kit/
+frontend/build/
+
+# Custom SPA artifacts
+custom-spas/*/node_modules/
+custom-spas/*/build/
+
+# Deployed SPA artifacts (built from frontend or custom-spas)
+public_pages/
+
+# Hermes agent plans
+.hermes/
+
+# Binary archives
+*.tar.gz

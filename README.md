@@ -10,25 +10,30 @@ No third party. No per-ticket fees.
 ### Option 1: Podman (recommended)
 
 ```bash
-git clone https://github.com/.../rhyph.git
+git clone https://github.com/bookenjoyer67/rhyph.git
 cd rhyph
 cp .env.example .env
 npm run build --prefix frontend   # build frontend once
 podman compose up -d
 ```
 
-Open `http://localhost:5173` — login with `admin@rhyph.local` / `admin123`
+Open `http://localhost:5173/login` — the setup wizard creates your first admin account.
 
 ### Option 2: Bare metal
 
 ```bash
-git clone https://github.com/.../rhyph.git
+git clone https://github.com/bookenjoyer67/rhyph.git
 cd rhyph
-./scripts/setup.sh     # creates DB, builds backend + frontend, seeds data
-./scripts/start.sh     # starts the server
+cp .env.example .env
+
+# Backend
+cargo run --release
+
+# Frontend (separate terminal)
+cd frontend && npm install && npm run dev
 ```
 
-Open `http://localhost:5173` — login with `admin@rhyph.local` / `admin123`
+Open `http://localhost:5173/login` — the setup wizard creates your first admin account.
 
 ## What You Can Do
 
@@ -56,7 +61,7 @@ Built on pretix's data model and Mobilizon's federation patterns. Federation via
 
 ```bash
 # Backend
-cargo run --release
+cargo run
 
 # Frontend (separate terminal)
 cd frontend && npm install && npm run dev

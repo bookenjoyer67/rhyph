@@ -16,7 +16,7 @@ DB_USER="${DB_USER:-rhyph}"
 DB_PASSWORD="${DB_PASSWORD:-rhyph}"
 DB_NAME="${DB_NAME:-rhyph}"
 DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@localhost/${DB_NAME}"
-JWT_SECRET="${JWT_SECRET:-change...tion}"
+JWT_SECRET="${JWT_SECRET:-change-this-in-production}"
 
 echo -e "${GREEN}Starting Rhyph...${NC}"
 
@@ -49,7 +49,8 @@ else
 fi
 
 echo ""
-echo -e "Login: ${GREEN}admin@rhyph.local${NC} / ${GREEN}admin123${NC}"
+echo -e "Open:  ${GREEN}http://localhost:5173/login${NC}"
+echo -e "       ${GREEN}The setup wizard will create your admin account.${NC}"
 echo ""
 echo "Press Ctrl+C to stop"
 

@@ -32,6 +32,20 @@ export async function login(email: string, password: string) {
     return res.json();
 }
 
+// Setup wizard
+export async function needsSetup() {
+    const res = await request('/api/v1/auth/needs-setup');
+    return res.json() as Promise<{ needs_setup: boolean }>;
+}
+
+export async function setup(email: string, password: string) {
+    const res = await request('/api/v1/auth/setup', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+    });
+    return res.json();
+}
+
 // Events
 export async function listEvents(orgSlug: string) {
     const res = await request(`/api/v1/organizers/${orgSlug}/events`);
@@ -181,4 +195,96 @@ export interface OrganizerConfig {
 export async function getOrganizer(slug: string): Promise<OrganizerConfig> {
     const res = await request(`/api/v1/organizers/${slug}`);
     return res.json();
+}
+
+export interface OrganizerFull {
+    id: string;
+    slug: string;
+    name: string;
+    theme: Record<string, unknown>;
+    custom_domain: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export async function updateOrganizer(slug: string, data: { name?: string; theme?: Record<string, unknown>; custom_domain?: string }): Promise<OrganizerFull> {
+    const res = await request(`/api/v1/admin/organizers/${slug}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}
+
+// Images
+export interface ImageInfo {
+    id: string;
+    url: string;
+    original_name: string;
+    content_type: string;
+    size_bytes: number;
+    created_at: string;
+}
+
+export async function uploadImage(slug: string, file: File): Promise<ImageInfo> {
+    const form = new FormData();
+    form.append('file', file);
+    const headers: Record<string, string> = {};
+    // Don't set Content-Type — browser sets it with boundary for multipart
+    const token = localStorage.getItem('rhyph_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(`/api/v1/admin/organizers/${slug}/images`, {
+        method: 'POST',
+        headers,
+        body: form,
+    });
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(body.error || `HTTP ${res.status}`);
+    }
+    return res.json();
+}
+
+export async function listImages(slug: string): Promise<ImageInfo[]> {
+    const res = await request(`/api/v1/admin/organizers/${slug}/images`);
+    return res.json();
+}
+
+export async function deleteImage(slug: string, imageId: string): Promise<void> {
+    await request(`/api/v1/admin/organizers/${slug}/images/${imageId}`, {
+        method: 'DELETE',
+    });
+}
+
+// Custom SPA
+export interface SpaStatus {
+    has_custom_spa: boolean;
+    index_exists: boolean;
+    spa_updated_at: string | null;
+}
+
+export async function getSpaStatus(slug: string): Promise<SpaStatus> {
+    const res = await request(`/api/v1/admin/organizers/${slug}/spa`);
+    return res.json();
+}
+
+export async function uploadSpa(slug: string, file: File): Promise<{ ok: boolean; file_count: number; path: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    const headers: Record<string, string> = {};
+    const token = localStorage.getItem('rhyph_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(`/api/v1/admin/organizers/${slug}/spa`, {
+        method: 'POST',
+        headers,
+        body: form,
+    });
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(body.error || `HTTP ${res.status}`);
+    }
+    return res.json();
+}
+
+export async function deleteSpa(slug: string): Promise<void> {
+    await request(`/api/v1/admin/organizers/${slug}/spa`, { method: 'DELETE' });
 }

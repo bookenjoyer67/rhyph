@@ -10,6 +10,8 @@ pub struct Organizer {
     pub name: String,
     pub theme: serde_json::Value,
     pub custom_domain: Option<String>,
+    pub has_custom_spa: bool,
+    pub spa_updated_at: Option<DateTime<Utc>>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

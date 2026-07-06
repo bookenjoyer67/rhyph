@@ -42,6 +42,7 @@
       <a href="/admin/orders" style="color:#aaa;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.9rem">Orders</a>
       <a href="/admin/checkin" style="color:#aaa;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.9rem">Checkin</a>
       <a href="/admin/devices" style="color:#aaa;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.9rem">Devices</a>
+      <a href="/admin/organizer" style="color:#aaa;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.9rem">Organizer</a>
     </div>
     <a href="/scan" style="color:#aaa;text-decoration:none;padding:8px 16px;border-radius:6px;font-size:.9rem">Scanner</a>
     <button

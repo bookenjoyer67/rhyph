@@ -21,6 +21,12 @@ pub struct LoginRequest {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct SetupRequest {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct CreateDeviceRequest {
     pub organizer_id: Option<Uuid>,
     pub name: String,
@@ -34,9 +40,32 @@ pub struct CreateDeviceResponse {
 
 pub fn routes(pool: Arc<PgPool>) -> Router {
     Router::new()
+        .route("/api/v1/auth/needs-setup", get(needs_setup_handler))
+        .route("/api/v1/auth/setup", post(setup_handler))
         .route("/api/v1/auth/login", post(login_handler))
         .route("/api/v1/admin/devices", get(list_devices).post(create_device))
         .with_state(pool)
+}
+
+async fn needs_setup_handler(
+    State(pool): State<Arc<PgPool>>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let needed = auth_svc::needs_setup(&pool).await?;
+    Ok(Json(serde_json::json!({ "needs_setup": needed })))
+}
+
+async fn setup_handler(
+    State(pool): State<Arc<PgPool>>,
+    Json(body): Json<SetupRequest>,
+) -> Result<Json<auth_svc::LoginResponse>, ApiError> {
+    if body.email.is_empty() || body.password.is_empty() {
+        return Err(ApiError::Validation("email and password required".into()));
+    }
+    if body.password.len() < 8 {
+        return Err(ApiError::Validation("password must be at least 8 characters".into()));
+    }
+    let response = auth_svc::create_admin(&pool, &body.email, &body.password).await?;
+    Ok(Json(response))
 }
 
 async fn login_handler(

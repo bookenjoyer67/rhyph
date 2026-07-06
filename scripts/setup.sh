@@ -29,7 +29,7 @@ DB_USER="${DB_USER:-rhyph}"
 DB_PASSWORD="${DB_PASSWORD:-rhyph}"
 DB_NAME="${DB_NAME:-rhyph}"
 DATABASE_URL="postgres://${DB_USER}:${DB_PASSWORD}@localhost/${DB_NAME}"
-JWT_SECRET="${JWT_SECRET:-change...tion}"
+JWT_SECRET="${JWT_SECRET:-change-this-in-production}"
 
 # ── PostgreSQL ──
 echo -e "${YELLOW}Setting up PostgreSQL...${NC}"
@@ -51,7 +51,7 @@ echo -e "${GREEN}  Database ready${NC}"
 
 # ── Build backend ──
 echo -e "${YELLOW}Building backend...${NC}"
-cargo build --release -p rhyph-server -p hashpw
+cargo build --release -p rhyph-server
 echo -e "${GREEN}  Backend built${NC}"
 
 # ── Run migrations ──
@@ -62,20 +62,14 @@ sleep 1
 fuser -k 3000/tcp 2>/dev/null || true
 echo -e "${GREEN}  Migrations applied${NC}"
 
-# ── Seed data ──
-echo -e "${YELLOW}Seeding initial data...${NC}"
-ADMIN_HASH=$(./target/release/hashpw "admin123")
-
+# ── Seed default organizer ──
+echo -e "${YELLOW}Seeding default organizer...${NC}"
 PGPASSWORD="${DB_PASSWORD}" psql -h localhost -U "${DB_USER}" -d "${DB_NAME}" <<SQL
-INSERT INTO users (email, password_hash, is_admin)
-VALUES ('admin@rhyph.local', '${ADMIN_HASH}', true)
-ON CONFLICT (email) DO NOTHING;
-
 INSERT INTO organizers (slug, name)
 VALUES ('default', 'My Venue')
 ON CONFLICT (slug) DO NOTHING;
 SQL
-echo -e "${GREEN}  Seed data ready${NC}"
+echo -e "${GREEN}  Default organizer ready${NC}"
 
 # ── Frontend ──
 echo -e "${YELLOW}Building frontend...${NC}"
@@ -85,9 +79,9 @@ echo -e "${GREEN}  Frontend built${NC}"
 echo ""
 echo -e "${GREEN}=== Setup complete! ===${NC}"
 echo ""
-echo -e "Start the backend:  ${YELLOW}./scripts/start.sh${NC}"
-echo -e "Login:              ${YELLOW}admin@rhyph.local${NC} / ${YELLOW}admin123${NC}"
-echo -e "Open:               ${YELLOW}http://localhost:5173${NC}"
+echo -e "Start the server:  ${YELLOW}./scripts/start.sh${NC}"
+echo -e "Open:               ${YELLOW}http://localhost:5173/login${NC}"
+echo -e "                    ${YELLOW}The setup wizard will create your admin account.${NC}"
 echo ""
 echo -e "Or use Podman:      ${YELLOW}podman compose up -d${NC}"
 echo ""

@@ -1,0 +1,2 @@
+ALTER TABLE organizers ADD COLUMN has_custom_spa BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE organizers ADD COLUMN spa_updated_at TIMESTAMPTZ;

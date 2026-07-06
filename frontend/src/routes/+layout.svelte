@@ -26,8 +26,12 @@
 
     let orgSlug: string | null = null;
 
+    // Homepage — load default organizer
+    if (path === '/') {
+      orgSlug = 'default';
+    }
     // /events/{org}/...
-    if (path.startsWith('/events/') && params.org) {
+    else if (path.startsWith('/events/') && params.org) {
       orgSlug = params.org;
     }
     // /cart?org=X
@@ -39,7 +43,7 @@
       orgSlug = searchParams.get('org');
     }
 
-    if (orgSlug && orgSlug !== 'default') {
+    if (orgSlug) {
       getOrganizer(orgSlug).then(org => {
         orgTheme = org.theme as Record<string, unknown>;
         orgName = org.name;
