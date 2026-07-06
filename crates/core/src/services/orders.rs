@@ -2,7 +2,7 @@
 // Ported from pretix's orders.py service layer.
 
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use sqlx::PgPool;
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
@@ -247,6 +247,7 @@ pub async fn mark_paid(
 // ── Internal helpers ──
 
 #[derive(Debug, sqlx::FromRow)]
+#[allow(dead_code)]
 struct CartPositionRow {
     id: Uuid,
     item_id: Uuid,
@@ -374,7 +375,34 @@ fn generate_secret(len: usize) -> String {
     (0..len).map(|_| chars[rng.gen_range(0..chars.len())]).collect()
 }
 
+/// Expire pending orders that have exceeded event reservation time.
+pub async fn expire_pending(pool: &PgPool) -> Result<u64, OrderError> {
+    let result = sqlx::query(
+        "UPDATE orders SET status = 'expired', updated_at = NOW()
+         WHERE status = 'pending'
+           AND payment_state != 'confirmed'
+           AND created_at < NOW() - (
+               SELECT make_interval(mins => events.reservation_time)
+               FROM events WHERE events.id = orders.event_id
+           )",
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        "UPDATE order_positions SET canceled = true
+         WHERE order_id IN (
+             SELECT id FROM orders WHERE status = 'expired' AND updated_at > NOW() - INTERVAL '5 seconds'
+         )",
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(result.rows_affected())
+}
+
 #[derive(Debug, sqlx::FromRow)]
+#[allow(dead_code)]
 struct QuotaCheckRow {
     #[allow(dead_code)]
     id: Uuid,

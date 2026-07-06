@@ -3,9 +3,7 @@ use rhyph_api::routes::{cart, checkin, events, orders};
 use sqlx::PgPool;
 use std::sync::Arc;
 
-pub fn build(pool: PgPool) -> Router {
-    let pool = Arc::new(pool);
-
+pub fn build(pool: Arc<PgPool>) -> Router {
     Router::new()
         .route("/health", get(health))
         .merge(cart::routes(pool.clone()))

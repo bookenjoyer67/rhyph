@@ -2,7 +2,7 @@ use axum::{
     extract::{Path, State},
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Response},
-    routing::{delete, get, post},
+    routing::{delete, post},
     Json, Router,
 };
 use rhyph_core::services::cart::{self};

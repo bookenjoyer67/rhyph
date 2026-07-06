@@ -1,6 +1,8 @@
 use std::net::SocketAddr;
+use std::sync::Arc;
+use std::time::Duration;
 
-use axum::Router;
+use rhyph_core::services::{cart, orders};
 use sqlx::postgres::PgPoolOptions;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
@@ -28,6 +30,21 @@ async fn main() -> anyhow::Result<()> {
         .run(&pool)
         .await?;
 
+    // Background cleanup task: expire carts + pending orders every 60s
+    let cleanup_pool = pool.clone();
+    tokio::spawn(async move {
+        loop {
+            tokio::time::sleep(Duration::from_secs(60)).await;
+            if let Err(e) = cart::clear_expired(&cleanup_pool).await {
+                tracing::warn!("cart cleanup failed: {e}");
+            }
+            if let Err(e) = orders::expire_pending(&cleanup_pool).await {
+                tracing::warn!("order expiry failed: {e}");
+            }
+        }
+    });
+
+    let pool = Arc::new(pool);
     let app = app::build(pool)
         .layer(CorsLayer::permissive())
         .layer(TraceLayer::new_for_http());
