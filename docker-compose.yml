@@ -1,0 +1,52 @@
+# Rhyph — one command start
+# Usage: podman compose up -d
+#        podman compose logs -f
+#        podman compose down
+
+version: "3.8"
+
+services:
+  db:
+    image: docker.io/library/postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-rhyph}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-rhyph}
+      POSTGRES_DB: ${DB_NAME:-rhyph}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-rhyph}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${DB_USER:-rhyph}:${DB_PASSWORD:-rhyph}@db/${DB_NAME:-rhyph}
+      JWT_SECRET: ${JWT_SECRET:-change...tion}
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      RUST_LOG: ${RUST_LOG:-info}
+    ports:
+      - "3000:3000"
+
+  frontend:
+    image: docker.io/library/nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/build:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "${PORT:-5173}:80"
+
+volumes:
+  pgdata:
