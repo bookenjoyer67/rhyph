@@ -27,10 +27,6 @@
   let timezone = $state('UTC');
 
   $effect(() => {
-    if (!localStorage.getItem('rhyph_token')) {
-      goto('/');
-      return;
-    }
     loadEvents();
   });
 

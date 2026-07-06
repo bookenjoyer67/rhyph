@@ -126,7 +126,18 @@
     "src": "src/routes/+page.svelte",
     "isEntry": true,
     "imports": [
-      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/admin/+layout.svelte": {
+    "file": "entries/pages/admin/_layout.svelte.js",
+    "name": "entries/pages/admin/_layout.svelte",
+    "src": "src/routes/admin/+layout.svelte",
+    "isEntry": true,
+    "imports": [
       "_exports.js",
       "_utils2.js",
       "_root.js",
@@ -139,11 +150,7 @@
     "src": "src/routes/admin/checkin/+page.svelte",
     "isEntry": true,
     "imports": [
-      "_index.js",
-      "_exports.js",
-      "_utils2.js",
-      "_root.js",
-      "_state.svelte.js"
+      "_index.js"
     ]
   },
   "src/routes/admin/devices/+page.svelte": {
@@ -188,11 +195,7 @@
     "src": "src/routes/admin/orders/+page.svelte",
     "isEntry": true,
     "imports": [
-      "_index.js",
-      "_exports.js",
-      "_utils2.js",
-      "_root.js",
-      "_state.svelte.js"
+      "_index.js"
     ]
   },
   "src/routes/cart/+page.svelte": {
@@ -214,6 +217,19 @@
     "src": "src/routes/events/[org]/[slug]/+page.svelte",
     "isEntry": true,
     "imports": [
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/login/+page.svelte": {
+    "file": "entries/pages/login/_page.svelte.js",
+    "name": "entries/pages/login/_page.svelte",
+    "src": "src/routes/login/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
       "_exports.js",
       "_utils2.js",
       "_root.js",

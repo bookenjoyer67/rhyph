@@ -20,10 +20,6 @@
   let copied = $state(false);
 
   $effect(() => {
-    if (!localStorage.getItem('rhyph_token')) {
-      goto('/');
-      return;
-    }
     loadDevices();
   });
 

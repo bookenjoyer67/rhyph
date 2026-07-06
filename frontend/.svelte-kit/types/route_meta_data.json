@@ -1,5 +1,6 @@
 {
 	"/": [],
+	"/admin": [],
 	"/admin/checkin": [],
 	"/admin/devices": [],
 	"/admin/events": [],
@@ -7,6 +8,7 @@
 	"/admin/orders": [],
 	"/cart": [],
 	"/events/[org]/[slug]": [],
+	"/login": [],
 	"/orders/[code]": [],
 	"/scan": []
 }

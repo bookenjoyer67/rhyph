@@ -1,10 +1,4 @@
 import { b as attr, a as attr_style, e as escape_html, c as stringify } from "../../../../chunks/index.js";
-import "@sveltejs/kit/internal";
-import "../../../../chunks/exports.js";
-import "../../../../chunks/utils2.js";
-import "@sveltejs/kit/internal/server";
-import "../../../../chunks/root.js";
-import "../../../../chunks/state.svelte.js";
 function _page($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
     let listId = "";

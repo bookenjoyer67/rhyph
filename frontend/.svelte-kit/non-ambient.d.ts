@@ -29,7 +29,7 @@ declare module "$app/types" {
 	type MatcherParam<M> = M extends (param : string) => param is (infer U extends string) ? U : string;
 
 	export interface AppTypes {
-		RouteId(): "/" | "/admin" | "/admin/checkin" | "/admin/devices" | "/admin/events" | "/admin/events/[slug]" | "/admin/orders" | "/cart" | "/events" | "/events/[org]" | "/events/[org]/[slug]" | "/orders" | "/orders/[code]" | "/scan";
+		RouteId(): "/" | "/admin" | "/admin/checkin" | "/admin/devices" | "/admin/events" | "/admin/events/[slug]" | "/admin/orders" | "/cart" | "/events" | "/events/[org]" | "/events/[org]/[slug]" | "/login" | "/orders" | "/orders/[code]" | "/scan";
 		RouteParams(): {
 			"/admin/events/[slug]": { slug: string };
 			"/events/[org]": { org: string };
@@ -48,11 +48,12 @@ declare module "$app/types" {
 			"/events": { org?: string | undefined; slug?: string | undefined };
 			"/events/[org]": { org: string; slug?: string | undefined };
 			"/events/[org]/[slug]": { org: string; slug: string };
+			"/login": Record<string, never>;
 			"/orders": { code?: string | undefined };
 			"/orders/[code]": { code: string };
 			"/scan": Record<string, never>
 		};
-		Pathname(): "/" | "/admin/checkin" | "/admin/devices" | "/admin/events" | `/admin/events/${string}` & {} | "/admin/orders" | "/cart" | `/events/${string}/${string}` & {} | `/orders/${string}` & {} | "/scan";
+		Pathname(): "/" | "/admin/checkin" | "/admin/devices" | "/admin/events" | `/admin/events/${string}` & {} | "/admin/orders" | "/cart" | `/events/${string}/${string}` & {} | "/login" | `/orders/${string}` & {} | "/scan";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): string & {};
 	}

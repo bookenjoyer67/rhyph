@@ -10,7 +10,7 @@ return {
 	assets: new Set([]),
 	mimeTypes: {},
 	_: {
-		client: {start:"_app/immutable/entry/start.vIYdlWzB.js",app:"_app/immutable/entry/app.DacEwE0C.js",imports:["_app/immutable/entry/start.vIYdlWzB.js","_app/immutable/chunks/BiB_IdV_.js","_app/immutable/chunks/CSn2OvDB.js","_app/immutable/chunks/DJaCinOx.js","_app/immutable/chunks/BQpBQrn1.js","_app/immutable/chunks/B3CNlxvm.js","_app/immutable/chunks/Dp1pzeXC.js","_app/immutable/entry/app.DacEwE0C.js","_app/immutable/chunks/Dp1pzeXC.js","_app/immutable/chunks/CSn2OvDB.js","_app/immutable/chunks/DJaCinOx.js","_app/immutable/chunks/BQpBQrn1.js","_app/immutable/chunks/B3CNlxvm.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
+		client: {start:"_app/immutable/entry/start.DVyN8mA4.js",app:"_app/immutable/entry/app.DIlbe8ux.js",imports:["_app/immutable/entry/start.DVyN8mA4.js","_app/immutable/chunks/CJuViUBS.js","_app/immutable/chunks/CKYsBTn_.js","_app/immutable/chunks/D-2PQlz0.js","_app/immutable/chunks/7GsnfzMs.js","_app/immutable/chunks/DEVKnQ3u.js","_app/immutable/chunks/Bsm57jrX.js","_app/immutable/entry/app.DIlbe8ux.js","_app/immutable/chunks/CKYsBTn_.js","_app/immutable/chunks/D-2PQlz0.js","_app/immutable/chunks/7GsnfzMs.js","_app/immutable/chunks/DEVKnQ3u.js","_app/immutable/chunks/Bsm57jrX.js"],stylesheets:[],fonts:[],uses_env_dynamic_public:false},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
@@ -24,7 +24,9 @@ return {
 			__memo(() => import('./nodes/9.js')),
 			__memo(() => import('./nodes/10.js')),
 			__memo(() => import('./nodes/11.js')),
-			__memo(() => import('./nodes/12.js'))
+			__memo(() => import('./nodes/12.js')),
+			__memo(() => import('./nodes/13.js')),
+			__memo(() => import('./nodes/14.js'))
 		],
 		remotes: {
 			
@@ -34,70 +36,77 @@ return {
 				id: "/",
 				pattern: /^\/$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 3 },
+				page: { layouts: [0,], errors: [1,], leaf: 4 },
 				endpoint: null
 			},
 			{
 				id: "/admin/checkin",
 				pattern: /^\/admin\/checkin\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 4 },
+				page: { layouts: [0,2,], errors: [1,,], leaf: 5 },
 				endpoint: null
 			},
 			{
 				id: "/admin/devices",
 				pattern: /^\/admin\/devices\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 5 },
+				page: { layouts: [0,2,], errors: [1,,], leaf: 6 },
 				endpoint: null
 			},
 			{
 				id: "/admin/events",
 				pattern: /^\/admin\/events\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 6 },
+				page: { layouts: [0,2,], errors: [1,,], leaf: 7 },
 				endpoint: null
 			},
 			{
 				id: "/admin/events/[slug]",
 				pattern: /^\/admin\/events\/([^/]+?)\/?$/,
 				params: [{"name":"slug","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 7 },
+				page: { layouts: [0,2,], errors: [1,,], leaf: 8 },
 				endpoint: null
 			},
 			{
 				id: "/admin/orders",
 				pattern: /^\/admin\/orders\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 8 },
+				page: { layouts: [0,2,], errors: [1,,], leaf: 9 },
 				endpoint: null
 			},
 			{
 				id: "/cart",
 				pattern: /^\/cart\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 9 },
+				page: { layouts: [0,], errors: [1,], leaf: 10 },
 				endpoint: null
 			},
 			{
 				id: "/events/[org]/[slug]",
 				pattern: /^\/events\/([^/]+?)\/([^/]+?)\/?$/,
 				params: [{"name":"org","optional":false,"rest":false,"chained":false},{"name":"slug","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 10 },
+				page: { layouts: [0,], errors: [1,], leaf: 11 },
+				endpoint: null
+			},
+			{
+				id: "/login",
+				pattern: /^\/login\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 12 },
 				endpoint: null
 			},
 			{
 				id: "/orders/[code]",
 				pattern: /^\/orders\/([^/]+?)\/?$/,
 				params: [{"name":"code","optional":false,"rest":false,"chained":false}],
-				page: { layouts: [0,], errors: [1,], leaf: 11 },
+				page: { layouts: [0,], errors: [1,], leaf: 13 },
 				endpoint: null
 			},
 			{
 				id: "/scan",
 				pattern: /^\/scan\/?$/,
 				params: [],
-				page: { layouts: [0,2,], errors: [1,,], leaf: 12 },
+				page: { layouts: [0,3,], errors: [1,,], leaf: 14 },
 				endpoint: null
 			}
 		],

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getCheckinStats } from '$lib/api';
-  import { goto } from '$app/navigation';
 
   interface Stats {
     total_scans: number;
@@ -12,11 +11,7 @@
   let error = $state('');
   let stats = $state<Stats | null>(null);
 
-  $effect(() => {
-    if (!localStorage.getItem('rhyph_token')) {
-      goto('/');
-    }
-  });
+  $effect(() => {});
 
   async function fetchStats(e: Event) {
     e.preventDefault();

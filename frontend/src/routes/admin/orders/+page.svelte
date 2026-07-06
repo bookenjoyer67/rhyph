@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getOrderByCode } from '$lib/api';
-  import { goto } from '$app/navigation';
 
   interface OrderData {
     order: {
@@ -26,11 +25,7 @@
   let error = $state('');
   let order = $state<OrderData | null>(null);
 
-  $effect(() => {
-    if (!localStorage.getItem('rhyph_token')) {
-      goto('/');
-    }
-  });
+  $effect(() => {});
 
   async function lookupOrder(e: Event) {
     e.preventDefault();

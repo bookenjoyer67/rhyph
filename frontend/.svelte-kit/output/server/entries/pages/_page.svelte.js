@@ -1,4 +1,4 @@
-import { b as attr, a as attr_style, e as escape_html, c as stringify } from "../../chunks/index.js";
+import "clsx";
 import "@sveltejs/kit/internal";
 import "../../chunks/exports.js";
 import "../../chunks/utils2.js";
@@ -7,14 +7,7 @@ import "../../chunks/root.js";
 import "../../chunks/state.svelte.js";
 function _page($$renderer, $$props) {
   $$renderer.component(($$renderer2) => {
-    let email = "";
-    let password = "";
-    let loading = false;
-    $$renderer2.push(`<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111"><form style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:400px;padding:40px;background:#1a1a2e;border-radius:12px;border:1px solid #2a2a4a"><h1 style="font-size:1.8rem;font-weight:700;color:#7c5ce7;text-align:center;margin:0">Rhyph Admin</h1> `);
-    {
-      $$renderer2.push("<!--[-1-->");
-    }
-    $$renderer2.push(`<!--]--> <label style="display:flex;flex-direction:column;gap:4px;color:#aaa;font-size:.85rem">Email <input type="email"${attr("value", email)} required="" style="padding:12px;border:1px solid #2a2a4a;border-radius:6px;background:#0d0d1a;color:#eee;font-size:1rem;outline:none"/></label> <label style="display:flex;flex-direction:column;gap:4px;color:#aaa;font-size:.85rem">Password <input type="password"${attr("value", password)} required="" style="padding:12px;border:1px solid #2a2a4a;border-radius:6px;background:#0d0d1a;color:#eee;font-size:1rem;outline:none"/></label> <button type="submit"${attr("disabled", loading, true)}${attr_style(`background:#7c5ce7;color:#fff;border:none;padding:12px;border-radius:6px;cursor:pointer;font-size:1rem;font-weight:600;margin-top:8px;opacity:${stringify(1)}`)}>${escape_html("Login")}</button></form></div>`);
+    $$renderer2.push(`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 61px);background:#111;padding:48px 24px;text-align:center"><h1 style="font-size:3.5rem;font-weight:800;color:#fff;margin:0 0 16px;letter-spacing:-1px">Rhyph</h1> <p style="font-size:1.3rem;color:#888;margin:0 0 8px;max-width:500px">Self-hosted ticketing for venues and bands.</p> <p style="font-size:1rem;color:#666;margin:0 0 40px;max-width:450px">No third party. No per-ticket fees. Your events, your data.</p> <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center"><button style="background:#7c5ce7;color:#fff;border:none;padding:14px 36px;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700">Admin Login</button> <button style="background:transparent;color:#7c5ce7;border:2px solid #7c5ce7;padding:14px 36px;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700">Scanner</button></div></div>`);
   });
 }
 export {

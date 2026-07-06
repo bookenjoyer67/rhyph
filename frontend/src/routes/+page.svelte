@@ -1,71 +1,28 @@
 <script lang="ts">
-  import { login, setToken } from '$lib/api';
   import { goto } from '$app/navigation';
-
-  let email = $state('');
-  let password = $state('');
-  let error = $state('');
-  let loading = $state(false);
-
-  $effect(() => {
-    const token = localStorage.getItem('rhyph_token');
-    if (token) {
-      setToken(token);
-      goto('/admin/events');
-    }
-  });
-
-  async function handleLogin(e: Event) {
-    e.preventDefault();
-    loading = true;
-    error = '';
-    try {
-      const res = await login(email, password);
-      localStorage.setItem('rhyph_token', res.token);
-      setToken(res.token);
-      goto('/admin/events');
-    } catch (err: unknown) {
-      error = err instanceof Error ? err.message : 'Login failed';
-    } finally {
-      loading = false;
-    }
-  }
 </script>
 
-<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111">
-  <form
-    onsubmit={handleLogin}
-    style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:400px;padding:40px;background:#1a1a2e;border-radius:12px;border:1px solid #2a2a4a"
-  >
-    <h1 style="font-size:1.8rem;font-weight:700;color:#7c5ce7;text-align:center;margin:0">Rhyph Admin</h1>
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 61px);background:#111;padding:48px 24px;text-align:center">
+  <h1 style="font-size:3.5rem;font-weight:800;color:#fff;margin:0 0 16px;letter-spacing:-1px">Rhyph</h1>
+  <p style="font-size:1.3rem;color:#888;margin:0 0 8px;max-width:500px">
+    Self-hosted ticketing for venues and bands.
+  </p>
+  <p style="font-size:1rem;color:#666;margin:0 0 40px;max-width:450px">
+    No third party. No per-ticket fees. Your events, your data.
+  </p>
 
-    {#if error}
-      <p style="color:#e74c3c;margin:0;text-align:center;font-size:.9rem">{error}</p>
-    {/if}
-
-    <label style="display:flex;flex-direction:column;gap:4px;color:#aaa;font-size:.85rem">
-      Email
-      <input
-        type="email" bind:value={email} required
-        style="padding:12px;border:1px solid #2a2a4a;border-radius:6px;background:#0d0d1a;color:#eee;font-size:1rem;outline:none"
-      />
-    </label>
-
-    <label style="display:flex;flex-direction:column;gap:4px;color:#aaa;font-size:.85rem">
-      Password
-      <input
-        type="password" bind:value={password} required
-        style="padding:12px;border:1px solid #2a2a4a;border-radius:6px;background:#0d0d1a;color:#eee;font-size:1rem;outline:none"
-      />
-    </label>
-
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
     <button
-      type="submit" disabled={loading}
-      style="background:#7c5ce7;color:#fff;border:none;padding:12px;border-radius:6px;cursor:pointer;font-size:1rem;font-weight:600;margin-top:8px;opacity:{loading ? 0.6 : 1}"
-      onmouseenter={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = '#6a4fd4' }}
-      onmouseleave={(e) => { if (!loading) (e.currentTarget as HTMLElement).style.background = '#7c5ce7' }}
-    >
-      {loading ? 'Logging in...' : 'Login'}
-    </button>
-  </form>
+      onclick={() => goto('/login')}
+      style="background:#7c5ce7;color:#fff;border:none;padding:14px 36px;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700"
+      onmouseenter={(e) => (e.currentTarget as HTMLElement).style.background = '#6a4fd4'}
+      onmouseleave={(e) => (e.currentTarget as HTMLElement).style.background = '#7c5ce7'}
+    >Admin Login</button>
+    <button
+      onclick={() => goto('/scan')}
+      style="background:transparent;color:#7c5ce7;border:2px solid #7c5ce7;padding:14px 36px;border-radius:10px;cursor:pointer;font-size:1.1rem;font-weight:700"
+      onmouseenter={(e) => { (e.currentTarget as HTMLElement).style.background = '#7c5ce722' }}
+      onmouseleave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}
+    >Scanner</button>
+  </div>
 </div>

@@ -68,10 +68,6 @@
   ];
 
   $effect(() => {
-    if (!localStorage.getItem('rhyph_token')) {
-      goto('/');
-      return;
-    }
     loadEvent();
   });
 
