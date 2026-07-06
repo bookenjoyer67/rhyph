@@ -1,0 +1,13 @@
+[package]
+name = "rhyph-payments"
+version.workspace = true
+edition = "2021"
+license.workspace = true
+
+[dependencies]
+rhyph-core = { path = "../core" }
+serde.workspace = true
+uuid.workspace = true
+rust_decimal.workspace = true
+async-trait = "0.1"
+thiserror.workspace = true

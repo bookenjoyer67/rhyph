@@ -1,0 +1,1 @@
+// Seating service — seat assignment
