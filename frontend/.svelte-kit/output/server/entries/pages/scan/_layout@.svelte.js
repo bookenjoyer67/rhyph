@@ -1,4 +1,4 @@
-import { aa as head } from "../../../chunks/index.js";
+import { h as head } from "../../../chunks/index.js";
 function _layout_($$renderer, $$props) {
   let { children } = $$props;
   head("1t7vkw9", $$renderer, ($$renderer2) => {

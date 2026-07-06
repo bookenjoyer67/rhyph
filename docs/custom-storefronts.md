@@ -234,28 +234,42 @@ when injected at serve-time) and applies CSS variables.
 
 ## Implementation Phases
 
-### Phase 2a — Database + Theme Column (minimal)
+### Phase 2a — Theme Column + Custom CSS (minimal, no Rust changes)
 
-- Migration: `custom_storefront`, `custom_domain`, `theme` on `organizers`
+- Migration: `theme` JSONB + `custom_domain` on `organizers`
 - Admin API: PATCH `/api/v1/admin/organizers/{slug}` to set theme
 - Default SPA: reads organizer theme on `/events/{org}/*` routes, applies CSS vars
-- No custom storefront serving yet — just the theme column
+- Custom CSS injection: `theme.custom_css` field → injected via `<style>` tag
+- Zero Rust changes. One migration, small SvelteKit changes.
 
-This gives venues immediate branding control without a custom build.
+This gives venues immediate branding control: `{ "primary_color": "#ff6b35", "logo_url": "https://...", "custom_css": ".event-card { border-radius: 0; }" }`
 
-### Phase 2b — Custom Storefront Serving (Servhost pattern)
+### Phase 2b — Frontend Registry (Akkoma marketplace pattern)
 
-- Rust server serves static files (add `ServeDir` + `tower-http/fs` feature)
-- `OrganizerStorefrontService` dispatcher
-- Config injection middleware
-- Admin API: upload/storefront management
-- Admin UI: organizer settings page with upload widget
+- `frontends` table (name, version, source_url, source_type, local_path)
+- Admin API: `POST /frontends/install`, `GET /frontends`, `DELETE /frontends/{id}`
+- `organizer.frontend_id` FK → pick a frontend
+- `OrganizerStorefrontService` dispatcher in Rust (Servhost pattern)
+- Config injection middleware (`window.RHYPH` → HTML)
+- Admin UI: theme browser + one-click apply
+- Ship 2-3 community themes as proof of concept
 
-### Phase 2c — Custom Domains
+Organizer flow: admin → themes → browse "Mojave" / "Neon" / "Brutalist" → preview → apply. No build, no upload, no dev.
 
-- Host header resolution in `OrganizerStorefrontService`
-- Admin UI: domain field with validation
-- SSL/docs for pointing CNAME
+### Phase 2c — Custom Upload + Custom Domains
+
+- Organizer upload: tar.gz → extracted to `storefronts/{org_slug}/`
+- `frontends.source_type = 'custom'` entries
+- Host header resolution in dispatcher
+- Admin UI: domain field, upload widget
+- Splash screen injection from theme JSON
+- SSL/docs for CNAME setup
+
+### Phase 2d (stretch) — Fan-Level Override
+
+- Fan can switch to default Rhyph view even when organizer uses custom storefront
+- Stored in cookie/localStorage
+- Same pattern as Akkoma's per-user frontend picker
 
 ## Tradeoffs & Edge Cases
 
@@ -281,8 +295,158 @@ work transparently — the API is served from the same domain. No CORS issues.
 
 **Security:**
 Organizers can only upload static assets (HTML/CSS/JS/images). No server-side code.
-Upload size limits enforced. File type validation on extraction. Custom storefront
-served from a dedicated directory, never overlaps with the default SPA or admin routes.
+These changes to the default SPA are **Phase 2a** — they work immediately after
+the `theme` column exists, no Rust changes required.
+
+## Akkoma-Inspired Patterns
+
+Akkoma's frontend management system is the most mature example in fediverse
+software. Key patterns to borrow:
+
+### 1. Frontend Registry ("Theme Marketplace")
+
+Akkoma has `frontends.available` in config — a catalog of known frontends with
+names, GitLab repos, and install commands. Rhyph gets a `frontends` table:
+
+```sql
+CREATE TABLE frontends (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(100) NOT NULL UNIQUE,       -- "mojave", "neon", "brutalist"
+    display_name VARCHAR(255) NOT NULL,       -- "Mojave Desert Theme"
+    description TEXT,
+    version VARCHAR(50) NOT NULL,             -- "1.2.0"
+    source_url VARCHAR(512),                  -- GitHub release download URL
+    source_type VARCHAR(20) NOT NULL DEFAULT 'community',
+        -- 'system'   = shipped with Rhyph (the default SPA)
+        -- 'community' = listed in the theme marketplace
+        -- 'custom'    = organizer uploaded
+    local_path VARCHAR(512),                  -- extracted to storefronts/themes/{name}/{version}/
+    author VARCHAR(255),
+    thumbnail_url VARCHAR(512),
+    installed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Which frontend an organizer uses
+ALTER TABLE organizers ADD COLUMN frontend_id UUID REFERENCES frontends(id);
+```
+
+This turns "upload your own static build" into a browsable catalog. An organizer
+goes to admin → themes → picks "Mojave" → previews → clicks "Apply." Zero
+technical skill needed.
+
+### 2. Frontend Install via Admin API (not CLI)
+
+Akkoma uses `mix pleroma.frontend install <name> --ref <ref>`. Rhyph does it
+via admin API instead — no shell access needed:
+
+```
+POST /api/v1/admin/frontends/install
+{
+    "name": "mojave",
+    "source_url": "https://github.com/rhyph-themes/mojave/releases/download/v1.2.0/dist.tar.gz"
+}
+→ Server downloads, extracts to storefronts/themes/mojave/v1.2.0/
+→ Registers in frontends table
+→ Returns { id, name, version, preview_url }
+```
+
+```
+GET /api/v1/admin/frontends
+→ [{ id, name: "mojave", display_name: "Mojave Desert", version: "1.2.0",
+     source_type: "community", thumbnail_url: "..." }, ...]
+
+POST /api/v1/admin/organizers/{slug}/frontend
+{ "frontend_id": "uuid-of-mojave" }
+→ Sets organizer.frontend_id → custom storefront is live
+```
+
+```
+DELETE /api/v1/admin/frontends/{id}
+→ Removes from disk and registry (unless an organizer is using it)
+```
+
+### 3. Three Levels of Customization (lightest → heaviest)
+
+Inspired by Akkoma's approach of having both lightweight config overrides AND
+full frontend replacement:
+
+| Level | What it is | Tech skill needed | Akkoma analog |
+|-------|------------|-------------------|---------------|
+| **Theme JSON** | `organizer.theme` column — colors, logo, font | Zero | `custom.css` + PleromaFE admin config |
+| **Installed theme** | Pick from marketplace, one-click apply | Zero | `frontends.available` → pick in settings |
+| **Custom upload** | Build your own SPA, upload tar.gz | Developer | Manual frontend install from ZIP |
+
+Level 1 (theme JSON) applies to the default SPA via CSS variables — no separate
+build needed. Level 2 is the frontend registry. Level 3 is the Servhost pattern
+(full custom build).
+
+### 4. Splash Screen / Pre-Loader
+
+Akkoma's PleromaFE customization guide documents a branded splash screen — logo
++ name + tagline on black background, shown before the SPA mounts. Rhyph can do
+the same for custom storefronts:
+
+- Organizer sets `theme.splash_logo_url` and `theme.splash_tagline`
+- Config injector adds a `<div id="rhyph-splash">` to index.html at serve time
+- Splash removes itself when the SPA mounts (MutationObserver on app root)
+
+This makes the venue's brand visible INSTANTLY, even before JavaScript loads.
+Critical for venues on slow connections (festivals, rural areas).
+
+### 5. Per-Organizer Frontend Selection
+
+Akkoma lets users pick their preferred frontend in Settings → Frontends.
+Rhyph lets organizers pick their storefront. Same pattern, different actor.
+
+The `organizer.frontend_id` column is the selection. The dispatcher reads it
+at request time. An organizer can switch themes without affecting their events,
+tickets, or orders — just the paint layer changes.
+
+**Stretch goal**: Fan-level frontend override. A fan browsing `fillmore.events`
+could switch to the default Rhyph view if they prefer it. Stored in a cookie
+or localStorage. Same pattern as Akkoma's per-user frontend picker.
+
+### 6. Admin Panel Is Always Standard
+
+Akkoma's `admin-fe` is a SEPARATE installable frontend, never themed by user
+preferences. Rhyph formalizes this:
+
+- `/admin/*`, `/login`, `/scan` → always served from the default SPA
+- The admin `+layout.svelte` and scanner `+layout@.svelte` are NEVER overridden
+- Only `/events/{org}/*` and organizer-scoped public routes get dispatched
+
+This is already true in the current architecture, but Akkoma's explicit
+separation of `admin-fe` as its own package makes it a deliberate design
+choice rather than an accident of routing.
+
+### 7. Static Assets Pitfall (Learned from Akkoma)
+
+When Akkoma sets a custom frontend as `primary`, the SPA catch-all (`/*path`
+fallback) intercepts asset requests — the browser loads `index.html`, requests
+`/assets/main.js`, and receives `index.html` back instead. Blank page.
+
+**Rhyph avoids this by design:**
+- Custom storefronts are served from `/events/{org}/*` paths only, not root
+- Asset paths in custom builds are relative (the SvelteKit default)
+- `ServeDir` correctly resolves `/events/fillmore/_app/immutable/chunks/...`
+  to the custom storefront's file tree
+- No catch-all at root that would swallow asset requests
+
+**But verify during implementation:** test with a real custom build that asset
+paths resolve correctly under the path-prefixed routing.
+
+### 8. Custom CSS Injection (Akkoma `custom.css` Pattern)
+
+Akkoma loads `instance/static/static/custom.css` on every page without a
+rebuild. Rhyph can do the same:
+
+- Organizer sets `theme.custom_css` (text field in admin)
+- Config injector wraps it in `<style id="rhyph-custom">` and injects it
+- Organizer can tweak colors, hide elements, add custom fonts — no build needed
+
+This is the frictionless entry point. A venue owner pastes 20 lines of CSS and
+their event page changes color. No developer, no build, no upload.
 
 ## Crate Structure Changes
 

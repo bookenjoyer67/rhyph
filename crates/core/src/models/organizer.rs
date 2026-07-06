@@ -8,6 +8,23 @@ pub struct Organizer {
     pub id: Uuid,
     pub slug: String,
     pub name: String,
+    pub theme: serde_json::Value,
+    pub custom_domain: Option<String>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateOrganizerRequest {
+    pub name: Option<String>,
+    pub theme: Option<serde_json::Value>,
+    pub custom_domain: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OrganizerPublic {
+    pub slug: String,
+    pub name: String,
+    pub theme: serde_json::Value,
+    pub custom_domain: Option<String>,
 }

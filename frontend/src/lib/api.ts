@@ -169,3 +169,16 @@ export async function listDevices() {
     const res = await request('/api/v1/admin/devices');
     return res.json();
 }
+
+// Organizer (public config)
+export interface OrganizerConfig {
+    slug: string;
+    name: string;
+    theme: Record<string, unknown>;
+    custom_domain: string | null;
+}
+
+export async function getOrganizer(slug: string): Promise<OrganizerConfig> {
+    const res = await request(`/api/v1/organizers/${slug}`);
+    return res.json();
+}

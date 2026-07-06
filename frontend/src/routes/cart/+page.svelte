@@ -115,8 +115,8 @@
   });
 
   const inputStyle = 'padding:12px;border:1px solid #2a2a4a;border-radius:8px;background:#0d0d1a;color:#eee;outline:none;font-size:1rem;width:100%;box-sizing:border-box';
-  const cardStyle = 'background:#1a1a2e;border:1px solid #2a2a4a;border-radius:16px;padding:24px';
-  const accent = '#00E676';
+  const cardStyle = 'background:var(--rhyph-card-bg, #1a1a2e);border:1px solid var(--rhyph-card-border, #2a2a4a);border-radius:16px;padding:24px';
+  const accent = 'var(--rhyph-accent, #00E676)';
   const positionCount = $derived(positions.length);
 </script>
 

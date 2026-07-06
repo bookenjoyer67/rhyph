@@ -103,7 +103,7 @@ const options = {
     app: ({ head, body, assets, nonce, env }) => '<!doctype html>\n<html lang="en">\n<head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <title>Rhyph</title>\n    ' + head + '\n</head>\n<body style="margin:0;background:#111;color:#eee;font-family:system-ui,sans-serif">\n    ' + body + "\n</body>\n</html>\n",
     error
   },
-  version_hash: "1jrkdfb"
+  version_hash: "sz4uft"
 };
 async function get_hooks() {
   let handle;

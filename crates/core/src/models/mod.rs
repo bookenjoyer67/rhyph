@@ -11,7 +11,7 @@ pub mod voucher;
 pub mod question;
 pub mod federation;
 
-pub use organizer::Organizer;
+pub use organizer::{Organizer, OrganizerPublic, UpdateOrganizerRequest};
 
 pub use event::Event;
 

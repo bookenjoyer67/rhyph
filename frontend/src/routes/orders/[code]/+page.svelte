@@ -92,8 +92,8 @@
     return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
-  const cardStyle = 'background:#1a1a2e;border:1px solid #2a2a4a;border-radius:16px;padding:28px';
-  const accent = '#00E676';
+  const cardStyle = 'background:var(--rhyph-card-bg, #1a1a2e);border:1px solid var(--rhyph-card-border, #2a2a4a);border-radius:16px;padding:28px';
+  const accent = 'var(--rhyph-accent, #00E676)';
 </script>
 
 <div style="min-height:100vh;background:#111;color:#eee">

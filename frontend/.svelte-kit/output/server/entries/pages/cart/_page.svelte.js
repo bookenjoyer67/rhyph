@@ -44,7 +44,7 @@ function _page($$renderer, $$props) {
     $$renderer2.push(`<!--]--></h1> `);
     if (eventSlug()) {
       $$renderer2.push("<!--[0-->");
-      $$renderer2.push(`<a${attr("href", `/events/${stringify(org())}/${stringify(eventSlug())}`)} style="color:#00E676;text-decoration:none;font-size:.95rem">← Back to event</a>`);
+      $$renderer2.push(`<a${attr("href", `/events/${stringify(org())}/${stringify(eventSlug())}`)} style="color:var(--rhyph-accent, #00E676);text-decoration:none;font-size:.95rem">← Back to event</a>`);
     } else {
       $$renderer2.push("<!--[-1-->");
     }

@@ -3,8 +3,6 @@
 #        podman compose logs -f
 #        podman compose down
 
-version: "3.8"
-
 services:
   db:
     image: docker.io/library/postgres:18-alpine
