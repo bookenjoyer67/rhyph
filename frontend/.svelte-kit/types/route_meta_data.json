@@ -3,5 +3,10 @@
 	"/admin/checkin": [],
 	"/admin/devices": [],
 	"/admin/events": [],
-	"/admin/orders": []
+	"/admin/events/[slug]": [],
+	"/admin/orders": [],
+	"/cart": [],
+	"/events/[org]/[slug]": [],
+	"/orders/[code]": [],
+	"/scan": []
 }
