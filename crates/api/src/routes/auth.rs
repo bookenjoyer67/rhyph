@@ -22,7 +22,7 @@ pub struct LoginRequest {
 
 #[derive(Debug, Deserialize)]
 pub struct CreateDeviceRequest {
-    pub organizer_id: Uuid,
+    pub organizer_id: Option<Uuid>,
     pub name: String,
 }
 
@@ -54,12 +54,21 @@ async fn create_device(
 ) -> Result<Json<CreateDeviceResponse>, ApiError> {
     let api_key = auth_svc::generate_api_key();
     let id = Uuid::new_v4();
+    let organizer_id = if let Some(oid) = body.organizer_id {
+        oid
+    } else {
+        let (oid,): (Uuid,) = sqlx::query_as("SELECT id FROM organizers LIMIT 1")
+            .fetch_optional(&*pool).await
+            .map_err(|e| ApiError::Internal(e.to_string()))?
+            .ok_or_else(|| ApiError::Validation("no organizers exist — create one first".into()))?;
+        oid
+    };
 
     sqlx::query(
         "INSERT INTO devices (id, organizer_id, name, api_key, created_at) VALUES ($1, $2, $3, $4, NOW())",
     )
     .bind(id)
-    .bind(body.organizer_id)
+    .bind(organizer_id)
     .bind(&body.name)
     .bind(&api_key)
     .execute(&*pool)
