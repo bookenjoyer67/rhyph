@@ -2,6 +2,7 @@
 
 # Rhyph
 
+![Status](https://img.shields.io/badge/status-early_development-ff3e00?style=for-the-badge&labelColor=04060d)
 ![License](https://img.shields.io/badge/license-AGPLv3-1eff9d?style=for-the-badge&labelColor=04060d)
 ![Rust](https://img.shields.io/badge/Rust-Axum_0.8-e8c24a?style=for-the-badge&labelColor=04060d)
 ![SvelteKit](https://img.shields.io/badge/frontend-SvelteKit_5-ff3e00?style=for-the-badge&labelColor=04060d)
